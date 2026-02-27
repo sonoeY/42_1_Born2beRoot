@@ -81,6 +81,11 @@ The main is to construct a virtualized OS environment and to understand how the 
   1. Run `sudo reboot`.
   2. Enter your password to reboot the virtual machine.
 
+- How to get signature
+  1. Navigate to the directory containing the `.vdi` file in the terminal.
+  2. Run the following command:
+  `sha1sum <filename>.vdi`
+
 - Installation/Setup Summary
   - Create a virtual machine using VirtualBox.
   - Install the selected OS (Debian).
@@ -109,27 +114,30 @@ The commands listed below is the useable for checking or modifying OS setting.
 - `hostnamectl set-hostname <new hostname>` : modify hostname
 
 #### user management
-- `sudo useradd <new username>` : create a new user account
-- `passwd <username>`  : create a user password
+- `sudo useradd -m -s /bin/bash <new username>` : create a new user account / -m (create new user folder)/ -s (default shell setting)
+- `sudo passwd <username>`  : assign a new user password
 - `sudo addgroup <new groupname>` : create a new group
 - `sudo adduser <user> <group>` : add an existing user to a group
 - `getent group <groupname>` : display group information from the system database
 - `getent passwd | awk -F: '$3 == 0 || $3 >= 1000'` : list system and regular user accounts by UID
+- `sudo cat /etc/shadow`: display all user passwords
 
 #### sudo configuration
-- `cat /etc/sudoers` : display custom sudo configuration rules
-- `sudo visudo` : display custom sudo configuration rules
-- `sudo sudoreplay -l`: check input log with sudo command
+- `nano /etc/sudoers.d/sudo_config` : edit custom sudo configuration rules
+  - `sudo visudo` : edit custom sudo configuration rules (/etc/sudoers)
+  - `cat /etc/sudoers` : display custom sudo configuration rules
+- `sudo sudoreplay -d <file path> -l`: check input log with sudo command (-d: select file path where sudo-io is located)
 - `sudo sudoreplay <TSID>`: check output log with particular sudo command
 
 #### password configuration
 - `cat /etc/login.defs` : show system-wide password and login policy settings
-- `cat /etc/security/pwquality.conf` : list PAM configuration files for authentication policies
+- `cat /etc/pam.d/common-password` : list PAM configuration files for authentication policies
+  - `cat /etc/security/pwquality.conf` : list PAM configuration files for authentication policies
 
 #### ssh management
 - `sudo service ssh status` : check the current status of the SSH service
 - `sudo nano /etc/ssh/sshd_config` : edit the SSH daemon configuration
-- `sudo nano /etc/ssh/ssh_config` : edit the SSH client configuration
+  - `sudo nano /etc/ssh/ssh_config` : edit the SSH client configuration
 
 #### ufw management
 - `sudo service ufw status` : check the current status of the ufw service
@@ -138,10 +146,10 @@ The commands listed below is the useable for checking or modifying OS setting.
 - `sudo ufw delete <current rule>|<number>` : allow incoming traffic on a specific port
 
 #### cron management
-- `sudo systemctl stop cron` : stop the cron service in the current session
-- `sudo systemctl start cron` : start the cron service in the current session
 - `sudo systemctl disable cron` : disable the cron service at boot
 - `sudo systemctl enable --now cron` : enable and start the cron service immediately
+- `sudo systemctl stop cron` : stop the cron service in the current session
+- `sudo systemctl start cron` : start the cron service in the current session
 
 # Resources
 
